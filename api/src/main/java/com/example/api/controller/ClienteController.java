@@ -3,6 +3,7 @@ package com.example.api.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.api.model.Cliente;
@@ -10,6 +11,7 @@ import com.example.api.model.Cliente;
 @RestController
 @RequestMapping("/api/clientes")
 public class ClienteController {
+    @SuppressWarnings("FieldMayBeFinal")
     private List<Cliente> clientes = new ArrayList<>();
 
     public ClienteController() {
@@ -51,9 +53,6 @@ public class ClienteController {
     public Cliente atualizarParcialmente(@PathVariable Long id, @RequestBody Cliente clienteParcial) {
         for (Cliente cliente : clientes) {
             if (cliente.getId().equals(id)) {
-                if (clienteParcial.getNome() != null) {
-                    cliente.setNome(clienteParcial.getNome());
-                }
                 if (clienteParcial.getEmail() != null) {
                     cliente.setEmail(clienteParcial.getEmail());
                 }
@@ -67,7 +66,12 @@ public class ClienteController {
     }
 
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
-        clientes.removeIf(cliente -> cliente.getId().equals(id));
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        boolean removido = clientes.removeIf(cliente -> cliente.getId().equals(id));
+        if (removido) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
