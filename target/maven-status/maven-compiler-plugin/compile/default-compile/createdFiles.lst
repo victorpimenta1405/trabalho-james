@@ -1,0 +1,4 @@
+com\example\api\ApiApplication.class
+com\example\api\model\Cliente.class
+com\example\api\controller\ClienteController.class
+com\example\api\model\Cliente$ClienteBuilder.class
